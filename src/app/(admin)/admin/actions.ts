@@ -25,6 +25,7 @@ export interface Appointment {
     addedBy: string;
     paymentMobileNo?: string;
     trxID?: string;
+    type?: 'Online' | 'Offline';
 }
 
 export interface SerializableAppointment extends Omit<Appointment, 'createdAt'> {
@@ -113,6 +114,7 @@ export async function createManualAppointment(data: unknown): Promise<{ success:
         counselorId: counselor, // Store id
         addedBy: 'Reyad', // Hardcoded as requested
         trxID: restData.paymentMethod === 'Cash' ? '' : restData.trxID,
+        type: 'Online' as const,
         createdAt: serverTimestamp()
     };
     
@@ -390,4 +392,3 @@ export async function getTotalClients(): Promise<number> {
         return 0;
     }
 }
-

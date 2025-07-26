@@ -66,6 +66,7 @@ export async function createPendingAppointment(details: PendingBookingDetails): 
       addedBy: 'Client',
       meetLink: 'https://meet.google.com/bdm-mqir-biq',
       shortId: shortId, // Save the short ID
+      type: 'Online' as const,
       createdAt: serverTimestamp(),
     });
 
