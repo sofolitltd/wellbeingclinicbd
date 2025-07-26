@@ -2,7 +2,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -15,7 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export function PaymentConfirmationClientPage({ appointment }: { appointment: SerializableAppointment }) {
-    const router = useRouter();
     const { toast } = useToast();
     const { user, loading } = useClientAuth();
     const [isCopied, setIsCopied] = useState(false);
@@ -23,7 +21,7 @@ export function PaymentConfirmationClientPage({ appointment }: { appointment: Se
     useEffect(() => {
         toast({ title: "Appointment Confirmed!", description: "Your booking was successful." });
     }, [toast]);
-    
+
     const isUserViewingOwnAppointment = !loading && user && user.email === appointment.email;
     const sessionUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/session/${appointment.shortId}`;
 
@@ -44,40 +42,57 @@ export function PaymentConfirmationClientPage({ appointment }: { appointment: Se
                     </div>
                     <CardTitle className="font-headline text-3xl uppercase tracking-wider mt-4">Appointment Confirmed!</CardTitle>
                     <CardDescription>
-                        Your payment was successful and your appointment is booked. An email with these details has been sent to you.
+                        Your payment was successful and appointment is confirmed. A confirmation email will be sent shortly.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="text-left space-y-4">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                         <div className="flex items-center gap-3">
-                           <User className="size-5 text-primary shrink-0" />
-                           <div><p className="font-semibold text-muted-foreground">Name</p><p>{appointment.name}</p></div>
+                            <User className="size-5 text-primary shrink-0" />
+                            <div><p className="font-semibold text-muted-foreground">Name</p><p>{appointment.name}</p></div>
                         </div>
-                         <div className="flex items-center gap-3">
-                           <Calendar className="size-5 text-primary shrink-0" />
-                           <div><p className="font-semibold text-muted-foreground">Date</p><p>{format(parse(appointment.date, 'yyyy-MM-dd', new Date()), "PPP")}</p></div>
+                        <div className="flex items-center gap-3">
+                            <Calendar className="size-5 text-primary shrink-0" />
+                            <div><p className="font-semibold text-muted-foreground">Date</p><p>{format(parse(appointment.date, 'yyyy-MM-dd', new Date()), "PPP")}</p></div>
                         </div>
-                         <div className="flex items-center gap-3">
-                           <Stethoscope className="size-5 text-primary shrink-0" />
-                           <div><p className="font-semibold text-muted-foreground">Counselor</p><p>{appointment.counselor}</p></div>
+                        <div className="flex items-center gap-3">
+                            <Stethoscope className="size-5 text-primary shrink-0" />
+                            <div><p className="font-semibold text-muted-foreground">Counselor</p><p>{appointment.counselor}</p></div>
                         </div>
-                         <div className="flex items-center gap-3">
-                           <Clock className="size-5 text-primary shrink-0" />
-                           <div><p className="font-semibold text-muted-foreground">Time</p><p>{appointment.time}</p></div>
+                        <div className="flex items-center gap-3">
+                            <Clock className="size-5 text-primary shrink-0" />
+                            <div><p className="font-semibold text-muted-foreground">Time</p><p>{appointment.time}</p></div>
                         </div>
                     </div>
                     <Separator />
-                    <div className="text-center bg-muted/50 p-4 rounded-lg">
-                         <p className="font-semibold text-base flex items-center justify-center gap-2"><Save className="size-5" /> Your Session Link</p>
-                         <p className="text-sm text-muted-foreground mt-1 mb-2">Please save this unique link. You will use it to join your session.</p>
-                         <div className="bg-background p-2 rounded-md flex items-center justify-between gap-2">
-                             <a href={sessionUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm break-all text-left">{sessionUrl}</a>
-                             <Button variant="ghost" size="icon" onClick={handleCopy} className="shrink-0">
-                                <Copy className="size-4" />
-                                <span className="sr-only">Copy link</span>
-                             </Button>
-                         </div>
-                    </div>
+
+                    {!loading && !user && (
+                        <div className="text-center bg-muted/50 p-4 rounded-lg">
+                            <p className="font-semibold text-base flex items-center justify-center gap-2">
+                                <Save className="size-5" /> Your Session Link
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-1 mb-2">
+                                Save this link to join your session.
+                                We’ll email it to you as well. Need help? Call us at 01823161333.
+
+
+                            </p>
+                            <div className="bg-background p-2 rounded-md flex items-center justify-between gap-2">
+                                <a
+                                    href={sessionUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline text-sm break-all text-left"
+                                >
+                                    {sessionUrl}
+                                </a>
+                                <Button variant="ghost" size="icon" onClick={handleCopy} className="shrink-0">
+                                    <Copy className="size-4" />
+                                    <span className="sr-only">Copy link</span>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
 
                 </CardContent>
                 <CardFooter className="flex-col gap-4">
@@ -92,8 +107,8 @@ export function PaymentConfirmationClientPage({ appointment }: { appointment: Se
                 </CardFooter>
             </Card>
 
-             {!loading && !user && (
-                 <Alert>
+            {!loading && !user && (
+                <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertTitle>Create an Account to Manage Bookings!</AlertTitle>
                     <AlertDescription>
@@ -104,7 +119,7 @@ export function PaymentConfirmationClientPage({ appointment }: { appointment: Se
                         </div>
                     </AlertDescription>
                 </Alert>
-             )}
+            )}
         </div>
     )
 }

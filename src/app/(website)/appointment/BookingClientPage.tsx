@@ -234,7 +234,7 @@ export function BookingClientPage({ selectedService, selectedCounselor }: { sele
             return;
         }
         setIsSubmitting(true);
-        toast({ title: "Redirecting to Payment...", description: "Please complete the payment in the new window." });
+        // toast({ title: "Redirecting to Payment...", description: "Please complete the payment in the new window." });
 
         const serviceData = availableServices.find(s => s.value === service);
         const counselorData = counselors.find(c => c.value === counselor);
@@ -279,18 +279,29 @@ export function BookingClientPage({ selectedService, selectedCounselor }: { sele
         }
     }
 
-    if (isSubmitting) {
-        return (
-            <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
-                <div className="text-center p-8 rounded-lg bg-card shadow-2xl border">
-                    <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-                    <h2 className="text-xl font-semibold mb-2">Processing Your Request...</h2>
-                    <p className="text-muted-foreground">You are being redirected to the payment page.</p>
-                    <p className="text-red-600 font-bold mt-4">Please do not close or refresh this window until your payment is complete.</p>
-                </div>
+if (isSubmitting) {
+    return (
+        <div
+            className="fixed inset-0 bg-[#9d9d9c] z-50 flex items-center justify-center"
+            role="dialog" // More appropriate for a modal-like overlay that requires user attention
+            aria-modal="true" // Indicates that the dialog is modal and blocks content behind it
+            aria-labelledby="processing-request-title" // Links to the main title of the dialog
+        >
+            <div className="text-center p-8 rounded-lg bg-card shadow-2xl border" role="document">
+                <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" aria-hidden="true" />
+                <h2 id="processing-request-title" className="text-xl font-semibold mb-2">
+                    Processing Your Request...
+                </h2>
+                <p className="text-muted-foreground mb-2">
+                    You are being redirected to the payment page.
+                </p>
+                <p className="text-red-600 font-bold mt-4">
+                    Please do not close or refresh this window until your payment is complete.
+                </p>
             </div>
-        )
-    }
+        </div>
+    );
+}
 
     return (
         <div className="container mx-auto px-4 py-16 md:px-6">
