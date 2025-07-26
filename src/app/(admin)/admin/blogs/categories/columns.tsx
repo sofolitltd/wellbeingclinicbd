@@ -1,0 +1,84 @@
+
+'use client';
+
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal, Edit, Trash2, ArrowUpDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import type { CategoryWithPostCount } from '../actions';
+import { Badge } from '@/components/ui/badge';
+
+export const getColumns = (
+  onEdit: (category: CategoryWithPostCount) => void,
+  onDelete: (category: CategoryWithPostCount) => void
+): ColumnDef<CategoryWithPostCount>[] => [
+  {
+    accessorKey: 'name',
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+     cell: ({ row }) => {
+      const category = row.original;
+      return (
+        <div className="font-medium">{category.name}</div>
+      )
+    },
+  },
+  {
+    accessorKey: 'postCount',
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Post Count
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const count = row.original.postCount;
+      return <Badge variant="outline">{count}</Badge>
+    }
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const category = row.original;
+
+      return (
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => onEdit(category)}>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                onClick={() => onDelete(category)}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+  },
+];
