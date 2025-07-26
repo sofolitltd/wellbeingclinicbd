@@ -130,6 +130,7 @@ export async function getAppointmentByShortId(shortId: string): Promise<Serializ
         return {
             ...data,
             id: docSnap.id,
+            meetLink: data.meetLink,
             createdAt: (data.createdAt as Timestamp).toDate().toISOString(),
         };
     } catch (error) {

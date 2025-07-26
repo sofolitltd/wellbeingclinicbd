@@ -26,6 +26,7 @@ export interface Appointment {
     paymentMobileNo?: string;
     trxID?: string;
     type?: 'Online' | 'Offline';
+    meetLink?: string;
 }
 
 export interface SerializableAppointment extends Omit<Appointment, 'createdAt'> {
