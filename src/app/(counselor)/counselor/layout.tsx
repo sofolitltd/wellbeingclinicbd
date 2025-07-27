@@ -11,7 +11,7 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { CounselorNav } from '../CounselorNav';
 import { CounselorAuthProvider, useCounselorAuth } from '@/context/CounselorAuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
@@ -39,13 +39,14 @@ const Logo = () => (
 function ProtectedCounselorLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useCounselorAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/counselor/login');
     }
   }, [user, loading, router]);
-
+  
   if (loading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">

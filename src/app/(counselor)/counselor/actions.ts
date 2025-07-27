@@ -2,45 +2,35 @@
 'use server';
 
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, Timestamp, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, Timestamp, orderBy, doc, getDoc } from 'firebase/firestore';
 import type { SerializableAppointment } from '@/app/(admin)/admin/actions';
 
 // This function fetches clients for a specific counselor based on their UID.
 export async function getCounselorClients(uid: string): Promise<SerializableAppointment[]> {
-    console.log(`[Server Action] Starting getCounselorClients for UID: ${uid}`);
-
     if (!uid) {
         console.error("[Server Action] Error: UID is missing.");
         return [];
     }
 
     try {
-        // Step 1: Find the counselor's document using their UID to get their name.
-        const counselorsRef = collection(db, 'counselors');
-        const counselorQuery = query(counselorsRef, where('uid', '==', uid));
-        const counselorSnapshot = await getDocs(counselorQuery);
+        const counselorRef = doc(db, 'counselors', uid);
+        const counselorSnap = await getDoc(counselorRef);
 
-        if (counselorSnapshot.empty) {
+        if (!counselorSnap.exists()) {
             console.log(`[Server Action] No counselor found in 'counselors' collection for UID: ${uid}`);
             return [];
         }
 
-        const counselorDoc = counselorSnapshot.docs[0];
-        const counselorName = counselorDoc.data().name;
-        console.log(`[Server Action] Found counselor name: "${counselorName}" for UID: ${uid}`);
+        const counselorName = counselorSnap.data().name;
 
-        // Step 2: Use the counselor's name to fetch their appointments.
         const appointmentsRef = collection(db, 'appointments');
-        const appointmentsQuery = query(appointmentsRef, where('counselor', '==', counselorName));
+        const appointmentsQuery = query(appointmentsRef, where('counselor', '==', counselorName), orderBy('createdAt', 'desc'));
         const appointmentSnapshot = await getDocs(appointmentsQuery);
         
-        console.log(`[Server Action] Found ${appointmentSnapshot.docs.length} appointments for counselor: "${counselorName}"`);
-
         if (appointmentSnapshot.empty) {
             return [];
         }
 
-        // Process and serialize the appointments data.
         const clients = appointmentSnapshot.docs.map(doc => {
             const data = doc.data();
             const createdAt = data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : new Date().toISOString();

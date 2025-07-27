@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { CounselorAuthProvider, useCounselorAuth } from '@/context/CounselorAuthContext';
+import { useCounselorAuth } from '@/context/CounselorAuthContext';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,7 +22,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-function CounselorLoginPageContent() {
+export default function CounselorLoginPage() {
     const router = useRouter();
     const { toast } = useToast();
     const { user, signIn, loading } = useCounselorAuth();
@@ -120,13 +120,4 @@ function CounselorLoginPageContent() {
             </Card>
         </div>
     );
-}
-
-
-export default function CounselorLoginPage() {
-    return (
-        <CounselorAuthProvider>
-            <CounselorLoginPageContent />
-        </CounselorAuthProvider>
-    )
 }
