@@ -6,7 +6,7 @@ import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteD
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { counselors } from '@/data/counselors';
-import { startOfToday } from 'date-fns';
+import { startOfToday, startOfWeek, endOfWeek, format } from 'date-fns';
 
 export interface Appointment {
     id: string;
@@ -479,16 +479,20 @@ export async function getDashboardStats() {
 
 export async function getUpcomingAppointments(): Promise<SerializableAppointment[]> {
     try {
-        const today = startOfToday();
-        const todayString = today.toISOString().split('T')[0]; // Format as yyyy-MM-dd
+        const today = new Date();
+        const start = startOfWeek(today, { weekStartsOn: 1 }); // Monday as the start of the week
+        const end = endOfWeek(today, { weekStartsOn: 1 });
+
+        const startDateString = format(start, 'yyyy-MM-dd');
+        const endDateString = format(end, 'yyyy-MM-dd');
 
         const appointmentsCollection = collection(db, 'appointments');
         const q = query(
             appointmentsCollection, 
-            where('date', '>=', todayString),
+            where('date', '>=', startDateString),
+            where('date', '<=', endDateString),
             orderBy('date', 'asc'),
-            orderBy('time', 'asc'),
-            limit(5)
+            orderBy('time', 'asc')
         );
         const snapshot = await getDocs(q);
 
