@@ -1,9 +1,8 @@
 
-
 'use server';
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc, writeBatch, addDoc, serverTimestamp, where, getDoc, setDoc, getCountFromServer } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc, writeBatch, addDoc, serverTimestamp, where, getDoc, setDoc, getCountFromServer, limit } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { counselors } from '@/data/counselors';
@@ -412,11 +411,6 @@ export async function verifyAdminCredentials(credentials: unknown): Promise<{ su
     }
 
     const { username, password } = validation.data;
-    
-    // For initial setup, use hardcoded credentials
-    if (username === 'wbcadmin' && password === 'admin@@') {
-        return { success: true, user: { username: 'wbcadmin' } };
-    }
 
     try {
         const adminsRef = collection(db, "admins");
