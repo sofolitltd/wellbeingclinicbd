@@ -1,3 +1,6 @@
+
+import { ClientAuthProvider } from '@/context/ClientAuthContext';
+
 // This layout ensures that pages within the (auth) group, like login and signup,
 // do not inherit the main website header and footer, providing a cleaner interface.
 export default function AuthLayout({
@@ -5,5 +8,5 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <ClientAuthProvider>{children}</ClientAuthProvider>;
 }
