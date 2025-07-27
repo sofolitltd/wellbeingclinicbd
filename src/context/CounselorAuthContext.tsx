@@ -24,18 +24,10 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       const isCounselorSession = sessionStorage.getItem('wbc-counselor-session') === 'true';
       if (user && isCounselorSession) {
-         // Verify user exists in counselors collection on session restoration
-        const counselorExists = await verifyCounselorExists(user.email!);
-        if (counselorExists) {
-            setUser(user);
-        } else {
-            await signOut(auth);
-            sessionStorage.removeItem('wbc-counselor-session');
-            setUser(null);
-        }
+        setUser(user);
       } else {
         setUser(null);
       }

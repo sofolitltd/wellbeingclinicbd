@@ -27,18 +27,10 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       const isClientSession = sessionStorage.getItem('wbc-client-session') === 'true';
       if (user && isClientSession) {
-        // Verify user exists in clients collection on session restoration
-        const clientExists = await verifyClientExists(user.email!);
-        if (clientExists) {
-            setUser(user);
-        } else {
-            await signOut(auth);
-            sessionStorage.removeItem('wbc-client-session');
-            setUser(null);
-        }
+        setUser(user);
       } else {
         setUser(null);
       }
