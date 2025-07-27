@@ -399,3 +399,46 @@ export async function getTotalClients(): Promise<number> {
         return 0;
     }
 }
+
+const adminLoginSchema = z.object({
+    username: z.string().min(1, 'Username is required'),
+    password: z.string().min(1, 'Password is required'),
+});
+
+export async function verifyAdminCredentials(credentials: unknown): Promise<{ success: boolean; error?: string; user?: { username: string } }> {
+    const validation = adminLoginSchema.safeParse(credentials);
+    if (!validation.success) {
+        return { success: false, error: 'Invalid input.' };
+    }
+
+    const { username, password } = validation.data;
+    
+    // For initial setup, use hardcoded credentials
+    if (username === 'wbcadmin' && password === 'admin@@') {
+        return { success: true, user: { username: 'wbcadmin' } };
+    }
+
+    try {
+        const adminsRef = collection(db, "admins");
+        const q = query(adminsRef, where("username", "==", username), limit(1));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            return { success: false, error: "Invalid username or password." };
+        }
+
+        const adminDoc = querySnapshot.docs[0];
+        const adminData = adminDoc.data();
+
+        // NOTE: In a real-world scenario, you would hash passwords.
+        // For this project, we are comparing plaintext as requested.
+        if (adminData.password === password) {
+            return { success: true, user: { username: adminData.username } };
+        } else {
+            return { success: false, error: "Invalid username or password." };
+        }
+    } catch (error) {
+        console.error("Admin login error:", error);
+        return { success: false, error: "An error occurred during login." };
+    }
+}

@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +11,10 @@ import {
 import Link from 'next/link'
 import Image from 'next/image';
 import { AdminNav } from './AdminNav';
+import { AdminAuthProvider, useAdminAuth } from '@/context/AdminAuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const Logo = () => (
     <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
@@ -31,11 +37,24 @@ const Logo = () => (
     </div>
   );
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAdminAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-muted/40">
         <SidebarProvider>
@@ -54,5 +73,18 @@ export default function AdminLayout({
         </SidebarInset>
         </SidebarProvider>
     </div>
+  );
+}
+
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <AdminAuthProvider>
+      <ProtectedAdminLayout>{children}</ProtectedAdminLayout>
+    </AdminAuthProvider>
   )
 }
