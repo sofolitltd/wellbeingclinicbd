@@ -89,7 +89,7 @@ function CounselorLoginPageContent() {
                             <div className="space-y-2">
                                 <Label htmlFor="password">Password</Label>
                                 <div className="relative">
-                                    <Input id="password" type={showPassword ? 'text' : 'password'} {...form.register('password')} />
+                                    <Input id="password" type={showPassword ? 'text' : 'password'} {...form.register('password')} placeholder="********" autoComplete="new-password"/>
                                     <Button
                                         type="button"
                                         variant="ghost"

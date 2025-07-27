@@ -185,12 +185,12 @@ export default function ClientProfilePage() {
                             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="password">New Password</Label>
-                                    <Input id="password" type="password" {...passwordForm.register('password')} />
+                                    <Input id="password" type="password" {...passwordForm.register('password')} placeholder="********" autoComplete="new-password"/>
                                     {passwordForm.formState.errors.password && <p className="text-sm text-destructive">{passwordForm.formState.errors.password.message}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                                    <Input id="confirmPassword" type="password" {...passwordForm.register('confirmPassword')} />
+                                    <Input id="confirmPassword" type="password" {...passwordForm.register('confirmPassword')} placeholder="********" autoComplete="new-password"/>
                                     {passwordForm.formState.errors.confirmPassword && <p className="text-sm text-destructive">{passwordForm.formState.errors.confirmPassword.message}</p>}
                                 </div>
                                 <Button type="submit" className="w-full" disabled={isSubmittingPassword}>

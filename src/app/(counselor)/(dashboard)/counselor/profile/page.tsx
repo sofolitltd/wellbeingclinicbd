@@ -98,7 +98,7 @@ export default function CounselorProfilePage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>New Password</FormLabel>
-                                                <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
+                                                <FormControl><Input type="password" placeholder="********" {...field} autoComplete="new-password"/></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -109,7 +109,7 @@ export default function CounselorProfilePage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Confirm New Password</FormLabel>
-                                                <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
+                                                <FormControl><Input type="password" placeholder="********" {...field} autoComplete="new-password"/></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
