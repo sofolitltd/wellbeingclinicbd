@@ -45,14 +45,12 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    const response = await signInWithEmailAndPassword(auth, email, pass);
-
     const counselorExists = await verifyCounselorExists(email);
     if (!counselorExists) {
-        await signOut(auth);
         throw new Error("No counselor account found for this email.");
     }
-
+    
+    const response = await signInWithEmailAndPassword(auth, email, pass);
     sessionStorage.setItem('wbc-counselor-session', 'true');
     setUser(response.user); 
     return response;

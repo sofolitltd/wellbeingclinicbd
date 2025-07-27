@@ -48,14 +48,12 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    const response = await signInWithEmailAndPassword(auth, email, pass);
-
     const clientExists = await verifyClientExists(email);
     if (!clientExists) {
-        await signOut(auth);
         throw new Error("No client account found for this email.");
     }
-    
+
+    const response = await signInWithEmailAndPassword(auth, email, pass);
     sessionStorage.setItem('wbc-client-session', 'true');
     setUser(response.user);
     return response;
