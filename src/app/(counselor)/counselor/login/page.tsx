@@ -48,14 +48,15 @@ function CounselorLoginPageContent() {
         } catch (error) {
              const errorMessage = error instanceof Error && error.message.includes('auth/invalid-credential')
                 ? "Invalid email or password."
-                : "An error occurred. Please try again.";
+                : (error instanceof Error ? error.message : "An error occurred. Please try again.");
             toast({ variant: 'destructive', title: "Login Failed", description: errorMessage });
         } finally {
             setIsSubmitting(false);
         }
     };
-
-    if (loading) {
+    
+    // While loading, or if the user exists and is about to be redirected, show a loader.
+    if (loading || user) {
         return (
              <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -63,72 +64,64 @@ function CounselorLoginPageContent() {
         )
     }
     
-    // If not loading and user is not present, show the login form
-    if (!user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
-                <Card className="w-full max-w-sm">
-                    <CardHeader className="text-center">
-                         <Image
-                            src="/wb_logo.png"
-                            alt="Wellbeing Clinic Logo"
-                            width={60}
-                            height={60}
-                            className="mx-auto mb-4"
-                         />
-                        <CardTitle>Counselor Login</CardTitle>
-                        <CardDescription>Enter your credentials to access your dashboard.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input id="email" type="email" placeholder="m@example.com" {...form.register('email')} />
-                                 {form.formState.errors.email && <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>}
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
-                                <div className="relative">
-                                    <Input id="password" type={showPassword ? 'text' : 'password'} {...form.register('password')} placeholder="********" autoComplete="new-password"/>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute inset-y-0 right-0 h-full px-3"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        {showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                                        <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
-                                    </Button>
-                                </div>
-                                 {form.formState.errors.password && <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>}
-                            </div>
-                            <Button type="submit" className="w-full" disabled={isSubmitting}>
-                                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Login
-                            </Button>
-                        </form>
-                        <div className="mt-4 text-center text-xs text-muted-foreground space-y-1">
-                            <p>
-                                New counselor? 
-                            </p>
-                            <p>
-                            Please <a href="mailto:wellbeingclinicbd@gmail.com" className="text-primary font-bold hover:underline">Contact Admin</a> to create an account. 
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    // If still here (e.g., user is present but not yet redirected), show a loader or null.
+    // If not loading and no user, show the login form.
     return (
         <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Card className="w-full max-w-sm">
+                <CardHeader className="text-center">
+                     <Image
+                        src="/wb_logo.png"
+                        alt="Wellbeing Clinic Logo"
+                        width={60}
+                        height={60}
+                        className="mx-auto mb-4"
+                     />
+                    <CardTitle>Counselor Login</CardTitle>
+                    <CardDescription>Enter your credentials to access your dashboard.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" type="email" placeholder="m@example.com" {...form.register('email')} />
+                             {form.formState.errors.email && <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <div className="relative">
+                                <Input id="password" type={showPassword ? 'text' : 'password'} {...form.register('password')} placeholder="********" autoComplete="new-password"/>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute inset-y-0 right-0 h-full px-3"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                                    <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+                                </Button>
+                            </div>
+                             {form.formState.errors.password && <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>}
+                        </div>
+                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Login
+                        </Button>
+                    </form>
+                    <div className="mt-4 text-center text-xs text-muted-foreground space-y-1">
+                        <p>
+                            New counselor? 
+                        </p>
+                        <p>
+                        Please <a href="mailto:wellbeingclinicbd@gmail.com" className="text-primary font-bold hover:underline">Contact Admin</a> to create an account. 
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }
+
 
 export default function CounselorLoginPage() {
     return (
