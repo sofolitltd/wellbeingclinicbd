@@ -1,7 +1,9 @@
 
-import { getBlogs } from './actions';
-import { BlogsClientPage } from './BlogsClientPage';
+import { getBlogs from './actions';
+import { BlogsClientPage from './BlogsClientPage';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+
+export const revalidate = 0; // Ensure dynamic rendering
 
 export default async function BlogsAdminPage() {
     const blogs = await getBlogs();

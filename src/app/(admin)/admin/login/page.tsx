@@ -31,8 +31,9 @@ export default function AdminLoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
      useEffect(() => {
+        // If the user is logged in, redirect them away from the login page.
         if (!loading && user) {
-            router.push('/admin/dashboard');
+            router.push('/admin');
         }
     }, [user, loading, router]);
 
@@ -56,7 +57,8 @@ export default function AdminLoginPage() {
             setIsSubmitting(false);
         }
     };
-
+    
+    // If loading or if user exists (and is about to be redirected), show loader.
     if (loading || user) {
         return (
              <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
@@ -65,6 +67,7 @@ export default function AdminLoginPage() {
         )
     }
     
+    // If not loading and no user, show the login form.
     return (
         <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
             <Card className="w-full max-w-sm">

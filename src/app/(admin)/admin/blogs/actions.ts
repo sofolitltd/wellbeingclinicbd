@@ -127,7 +127,7 @@ export async function upsertBlog(id: string | null, data: unknown): Promise<{ su
         }
 
         revalidatePath('/');
-        revalidatePath('/admin/dashboard/blogs');
+        revalidatePath('/admin/blogs');
         revalidatePath('/blogs');
         revalidatePath(`/blogs/${blogData.slug}`);
         return { success: true };
@@ -145,7 +145,7 @@ export async function deleteBlog(id: string): Promise<{ success: boolean }> {
     try {
         await deleteDoc(doc(db, 'blogs', id));
         revalidatePath('/');
-        revalidatePath('/admin/dashboard/blogs');
+        revalidatePath('/admin/blogs');
         revalidatePath('/blogs');
         return { success: true };
     } catch (error) {
@@ -164,7 +164,7 @@ export async function deleteBlogs(ids: string[]): Promise<{ success: boolean }> 
         });
         await batch.commit();
         revalidatePath('/');
-        revalidatePath('/admin/dashboard/blogs');
+        revalidatePath('/admin/blogs');
         revalidatePath('/blogs');
         return { success: true };
     } catch (error) {
@@ -217,9 +217,9 @@ export async function addCategory(name: string): Promise<{ success: boolean; cat
         }
 
         const docRef = await addDoc(collection(db, 'blogCategories'), { name: trimmedName });
-        revalidatePath('/admin/dashboard/blogs/new');
-        revalidatePath('/admin/dashboard/blogs/[id]/edit');
-        revalidatePath('/admin/dashboard/blogs/categories');
+        revalidatePath('/admin/blogs/new');
+        revalidatePath('/admin/blogs/[id]/edit');
+        revalidatePath('/admin/blogs/categories');
         return { success: true, category: { id: docRef.id, name: trimmedName } };
     } catch (error) {
         console.error("Error adding category:", error);
@@ -269,9 +269,9 @@ export async function updateCategory(id: string, newName: string): Promise<{ suc
 
         await batch.commit();
 
-        revalidatePath('/admin/dashboard/blogs/new');
-        revalidatePath('/admin/dashboard/blogs/[id]/edit');
-        revalidatePath('/admin/dashboard/blogs/categories');
+        revalidatePath('/admin/blogs/new');
+        revalidatePath('/admin/blogs/[id]/edit');
+        revalidatePath('/admin/blogs/categories');
         revalidatePath('/blogs');
         return { success: true };
     } catch (error) {
@@ -313,9 +313,9 @@ export async function deleteCategory(id: string): Promise<{ success: boolean; er
 
         await batch.commit();
 
-        revalidatePath('/admin/dashboard/blogs/new');
-        revalidatePath('/admin/dashboard/blogs/[id]/edit');
-        revalidatePath('/admin/dashboard/blogs/categories');
+        revalidatePath('/admin/blogs/new');
+        revalidatePath('/admin/blogs/[id]/edit');
+        revalidatePath('/admin/blogs/categories');
         revalidatePath('/blogs');
         return { success: true };
     } catch (error) {

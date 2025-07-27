@@ -12,7 +12,7 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { AdminNav } from './AdminNav';
 import { AdminAuthProvider, useAdminAuth } from '@/context/AdminAuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
@@ -40,13 +40,23 @@ const Logo = () => (
 function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAdminAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    // If we are not loading and there is no user, redirect to login
     if (!loading && !user) {
       router.push('/admin/login');
     }
   }, [user, loading, router]);
 
+  // If we are on the login page, we don't need the protected layout.
+  // The page itself will handle redirecting if the user is already logged in.
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+  
+  // While loading or if there's no user, show a loading spinner.
+  // This prevents content flashing for unauthenticated users.
   if (loading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -55,6 +65,7 @@ function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // If the user is authenticated, render the full admin dashboard layout.
   return (
     <div className="bg-muted/40">
         <SidebarProvider>

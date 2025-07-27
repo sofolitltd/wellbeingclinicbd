@@ -3,6 +3,8 @@ import { getCategories, getCategoryPostCounts, CategoryWithPostCount } from '../
 import { CategoriesClientPage } from './CategoriesClientPage';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
+export const revalidate = 0; // Ensure dynamic rendering
+
 export default async function CategoriesAdminPage() {
     const categories = await getCategories();
     const postCounts = await getCategoryPostCounts();
