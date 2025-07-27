@@ -27,14 +27,23 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+      // This listener only acts if it's meant for a client session
+      const isClientSession = sessionStorage.getItem('wbc-session-type') === 'client';
+      if (user && isClientSession) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    return signInWithEmailAndPassword(auth, email, pass);
+    const response = await signInWithEmailAndPassword(auth, email, pass);
+    sessionStorage.setItem('wbc-session-type', 'client');
+    setUser(response.user); // Manually set user to update state immediately
+    return response;
   };
 
   const signUp = async (email: string, pass: string, data: Omit<SignUpData, 'email'>) => {
@@ -44,14 +53,17 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
       displayName: `${data.firstName} ${data.lastName}`,
     });
 
-    // Save additional details to Firestore
     await signUpClient(userCredential.user.uid, { ...data, email });
+    sessionStorage.setItem('wbc-session-type', 'client');
+    setUser(userCredential.user);
 
     return userCredential;
   };
 
   const logOut = async () => {
-    return signOut(auth);
+    await signOut(auth);
+    sessionStorage.removeItem('wbc-session-type');
+    setUser(null);
   };
   
   const reauthenticate = async (password: string) => {

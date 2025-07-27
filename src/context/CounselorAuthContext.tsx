@@ -23,18 +23,29 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+      // This listener only acts if it's meant for a counselor session
+      const isCounselorSession = sessionStorage.getItem('wbc-session-type') === 'counselor';
+      if (user && isCounselorSession) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    return signInWithEmailAndPassword(auth, email, pass);
+    const response = await signInWithEmailAndPassword(auth, email, pass);
+    sessionStorage.setItem('wbc-session-type', 'counselor');
+    setUser(response.user); // Manually set user to update state immediately
+    return response;
   };
 
   const logOut = async () => {
-    return signOut(auth);
+    await signOut(auth);
+    sessionStorage.removeItem('wbc-session-type');
+    setUser(null);
   };
 
   return (
