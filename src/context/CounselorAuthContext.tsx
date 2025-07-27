@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -29,23 +30,11 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, pass: string) => {
-    const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-    const idToken = await userCredential.user.getIdToken();
-
-    await fetch('/api/auth/session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
-    });
-
-    return userCredential;
+    return signInWithEmailAndPassword(auth, email, pass);
   };
 
   const logOut = async () => {
-    await signOut(auth);
-    await fetch('/api/auth/session', {
-      method: 'DELETE',
-    });
+    return signOut(auth);
   };
 
   return (
