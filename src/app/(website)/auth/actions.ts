@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import { db } from '@/lib/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, collection, query, where, getDocs, limit } from 'firebase/firestore';
 
 const SignUpSchema = z.object({
     firstName: z.string().min(1, 'First name is required'),
@@ -32,5 +32,17 @@ export async function signUpClient(uid: string, data: SignUpData) {
     } catch (error) {
         console.error("Error creating client document: ", error);
         throw new Error("Could not save client details.");
+    }
+}
+
+export async function verifyClientExists(email: string): Promise<boolean> {
+    if (!email) return false;
+    try {
+        const q = query(collection(db, "clients"), where("email", "==", email), limit(1));
+        const querySnapshot = await getDocs(q);
+        return !querySnapshot.empty;
+    } catch (error) {
+        console.error("Error verifying client existence:", error);
+        return false;
     }
 }

@@ -5,6 +5,8 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import { verifyCounselorExists } from '@/app/(admin)/admin/counselors/actions';
+
 
 const auth = getAuth(app);
 
@@ -22,11 +24,18 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // This listener only acts if it's meant for a counselor session
-      const isCounselorSession = sessionStorage.getItem('wbc-session-type') === 'counselor';
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const isCounselorSession = sessionStorage.getItem('wbc-counselor-session') === 'true';
       if (user && isCounselorSession) {
-        setUser(user);
+         // Verify user exists in counselors collection on session restoration
+        const counselorExists = await verifyCounselorExists(user.email!);
+        if (counselorExists) {
+            setUser(user);
+        } else {
+            await signOut(auth);
+            sessionStorage.removeItem('wbc-counselor-session');
+            setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -37,14 +46,21 @@ export function CounselorAuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, pass: string) => {
     const response = await signInWithEmailAndPassword(auth, email, pass);
-    sessionStorage.setItem('wbc-session-type', 'counselor');
-    setUser(response.user); // Manually set user to update state immediately
+
+    const counselorExists = await verifyCounselorExists(email);
+    if (!counselorExists) {
+        await signOut(auth);
+        throw new Error("No counselor account found for this email.");
+    }
+
+    sessionStorage.setItem('wbc-counselor-session', 'true');
+    setUser(response.user); 
     return response;
   };
 
   const logOut = async () => {
     await signOut(auth);
-    sessionStorage.removeItem('wbc-session-type');
+    sessionStorage.removeItem('wbc-counselor-session');
     setUser(null);
   };
 

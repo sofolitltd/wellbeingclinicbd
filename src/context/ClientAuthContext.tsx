@@ -6,6 +6,7 @@ import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User, createUs
 import { getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { signUpClient, type SignUpData } from '@/app/(website)/auth/actions';
+import { verifyClientExists } from '@/app/(website)/auth/actions';
 
 const auth = getAuth(app);
 
@@ -26,11 +27,18 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // This listener only acts if it's meant for a client session
-      const isClientSession = sessionStorage.getItem('wbc-session-type') === 'client';
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const isClientSession = sessionStorage.getItem('wbc-client-session') === 'true';
       if (user && isClientSession) {
-        setUser(user);
+        // Verify user exists in clients collection on session restoration
+        const clientExists = await verifyClientExists(user.email!);
+        if (clientExists) {
+            setUser(user);
+        } else {
+            await signOut(auth);
+            sessionStorage.removeItem('wbc-client-session');
+            setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -41,8 +49,15 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, pass: string) => {
     const response = await signInWithEmailAndPassword(auth, email, pass);
-    sessionStorage.setItem('wbc-session-type', 'client');
-    setUser(response.user); // Manually set user to update state immediately
+
+    const clientExists = await verifyClientExists(email);
+    if (!clientExists) {
+        await signOut(auth);
+        throw new Error("No client account found for this email.");
+    }
+    
+    sessionStorage.setItem('wbc-client-session', 'true');
+    setUser(response.user);
     return response;
   };
 
@@ -54,7 +69,7 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
     });
 
     await signUpClient(userCredential.user.uid, { ...data, email });
-    sessionStorage.setItem('wbc-session-type', 'client');
+    sessionStorage.setItem('wbc-client-session', 'true');
     setUser(userCredential.user);
 
     return userCredential;
@@ -62,7 +77,7 @@ export function ClientAuthProvider({ children }: { children: ReactNode }) {
 
   const logOut = async () => {
     await signOut(auth);
-    sessionStorage.removeItem('wbc-session-type');
+    sessionStorage.removeItem('wbc-client-session');
     setUser(null);
   };
   

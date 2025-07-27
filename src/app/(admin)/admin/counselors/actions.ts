@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import { db } from '@/lib/firebase';
-import { collection, doc, getDocs, query, orderBy, Timestamp, where, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, orderBy, Timestamp, where, setDoc, deleteDoc, updateDoc, limit } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 import nodemailer from 'nodemailer';
 import { adminAuth } from '@/lib/firebase/firebaseAdmin';
@@ -233,5 +233,17 @@ export async function updateCounselorPassword(uid: string, data: unknown): Promi
             return { success: false, error: error.message };
         }
         return { success: false, error: "Could not update password." };
+    }
+}
+
+export async function verifyCounselorExists(email: string): Promise<boolean> {
+    if (!email) return false;
+    try {
+        const q = query(collection(db, "counselors"), where("email", "==", email), limit(1));
+        const querySnapshot = await getDocs(q);
+        return !querySnapshot.empty;
+    } catch (error) {
+        console.error("Error verifying counselor existence:", error);
+        return false;
     }
 }
