@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 export default function UsersAdminPage() {
     const router = useRouter();
     useEffect(() => {
-        router.replace('/admin/dashboard/counselors');
+        router.replace('/admin/counselors');
     }, [router]);
 
     return (
