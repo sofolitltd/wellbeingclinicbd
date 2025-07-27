@@ -11,14 +11,16 @@ import {
 } from "@/components/ui/sidebar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CalendarRange, LayoutDashboard, FileText, Users, ChevronRight, List, PlusCircle, LayoutList, PanelRightOpen, Ticket, UserCog } from "lucide-react";
+import { CalendarRange, LayoutDashboard, FileText, Users, ChevronRight, List, PlusCircle, LayoutList, PanelRightOpen, Ticket, UserCog, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAdminAuth } from "@/context/AdminAuthContext";
 
 
 export function AdminNav() {
     const pathname = usePathname();
     const isMobile = useIsMobile();
+    const { logOut } = useAdminAuth();
 
     const isAppointmentsActive = pathname.startsWith('/admin/appointments');
     const isBlogsActive = pathname.startsWith('/admin/blogs');
@@ -105,6 +107,11 @@ export function AdminNav() {
                     <SidebarMenuItem>
                         <SidebarMenuButton isActive={isBlogsActive} onClick={() => setMobileBlogsOpen(true)}>
                             <FileText /><span>Blogs</span><PanelRightOpen className="ml-auto" />
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem className="mt-auto">
+                        <SidebarMenuButton onClick={logOut}>
+                            <LogOut /><span>Logout</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -253,6 +260,12 @@ export function AdminNav() {
                     </ul>
                 </CollapsibleContent>
             </Collapsible>
+             <SidebarMenuItem className="mt-auto">
+                <SidebarMenuButton tooltip="Logout" onClick={logOut}>
+                    <LogOut />
+                    <span>Logout</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
         </SidebarMenu>
     );
 }

@@ -6,6 +6,7 @@ import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteD
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { counselors } from '@/data/counselors';
+import { startOfToday } from 'date-fns';
 
 export interface Appointment {
     id: string;
@@ -434,5 +435,74 @@ export async function verifyAdminCredentials(credentials: unknown): Promise<{ su
     } catch (error) {
         console.error("Admin login error:", error);
         return { success: false, error: "An error occurred during login." };
+    }
+}
+
+// DASHBOARD ACTIONS
+export async function getDashboardStats() {
+    try {
+        const clientsCollection = collection(db, 'clients');
+        const clientsSnapshot = await getCountFromServer(clientsCollection);
+        const totalClients = clientsSnapshot.data().count;
+
+        const counselorsCollection = collection(db, 'counselors');
+        const counselorsSnapshot = await getCountFromServer(counselorsCollection);
+        const totalCounselors = counselorsSnapshot.data().count;
+
+        const appointmentsCollection = collection(db, 'appointments');
+        const appointmentsSnapshot = await getCountFromServer(appointmentsCollection);
+        const totalAppointments = appointmentsSnapshot.data().count;
+        
+        const completedAppointmentsQuery = query(appointmentsCollection, where("status", "==", "Completed"));
+        const completedSnapshot = await getDocs(completedAppointmentsQuery);
+        const totalEarnings = completedSnapshot.docs.reduce((sum, doc) => {
+            const price = parseFloat(doc.data().totalPrice || '0');
+            return sum + price;
+        }, 0);
+
+        return {
+            totalClients,
+            totalCounselors,
+            totalAppointments,
+            totalEarnings,
+        };
+    } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+        return {
+            totalClients: 0,
+            totalCounselors: 0,
+            totalAppointments: 0,
+            totalEarnings: 0,
+        };
+    }
+}
+
+export async function getUpcomingAppointments(): Promise<SerializableAppointment[]> {
+    try {
+        const today = startOfToday();
+        const todayString = today.toISOString().split('T')[0]; // Format as yyyy-MM-dd
+
+        const appointmentsCollection = collection(db, 'appointments');
+        const q = query(
+            appointmentsCollection, 
+            where('date', '>=', todayString),
+            orderBy('date', 'asc'),
+            orderBy('time', 'asc'),
+            limit(5)
+        );
+        const snapshot = await getDocs(q);
+
+        return snapshot.docs.map(doc => {
+            const data = doc.data() as Appointment;
+            return {
+                ...data,
+                id: doc.id,
+                createdAt: (data.createdAt as Timestamp).toDate().toISOString(),
+            };
+        });
+
+    } catch (error) {
+        console.error("Error fetching upcoming appointments:", error);
+        return [];
     }
 }
