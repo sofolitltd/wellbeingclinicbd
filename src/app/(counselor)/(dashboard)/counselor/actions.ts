@@ -60,6 +60,7 @@ export async function getCounselorClients(uid: string): Promise<SerializableAppo
                 createdAt,
                 status: data.status,
                 addedBy: data.addedBy,
+                meetLink: data.meetLink,
             } as SerializableAppointment;
         });
 

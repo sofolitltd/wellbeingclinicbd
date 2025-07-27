@@ -2,7 +2,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { SerializableAppointment } from '@/app/(admin)/admin/actions';
 import { format, parse } from 'date-fns';
@@ -84,5 +84,22 @@ export const getColumns = (
         </Select>
       )
     },
+  },
+   {
+    id: 'meetLink',
+    header: 'Meet Link',
+    cell: ({ row }) => {
+        const appointment = row.original;
+        if (appointment.status === 'Scheduled' && appointment.meetLink) {
+            return (
+                <Button asChild variant="secondary" size="sm">
+                    <a href={appointment.meetLink} target="_blank" rel="noopener noreferrer">
+                       <Video className="mr-2 h-4 w-4"/> Join Session
+                    </a>
+                </Button>
+            )
+        }
+        return null;
+    }
   },
 ];

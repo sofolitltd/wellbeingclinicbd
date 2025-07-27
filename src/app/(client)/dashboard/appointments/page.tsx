@@ -17,7 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useClientAuth } from '@/context/ClientAuthContext';
 import { getClientAppointments, SerializableAppointment } from '../actions';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Video } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -66,6 +66,23 @@ const columns: ColumnDef<SerializableAppointment>[] = [
             return <Badge className={cn("capitalize", getStatusClass())}>{status}</Badge>;
         },
     },
+     {
+        id: 'meetLink',
+        header: 'Meet Link',
+        cell: ({ row }) => {
+            const appointment = row.original;
+            if (appointment.status === 'Scheduled' && appointment.meetLink) {
+                return (
+                    <Button asChild variant="secondary" size="sm">
+                        <a href={appointment.meetLink} target="_blank" rel="noopener noreferrer">
+                           <Video className="mr-2 h-4 w-4"/> Join Session
+                        </a>
+                    </Button>
+                )
+            }
+            return null;
+        }
+    }
 ];
 
 
