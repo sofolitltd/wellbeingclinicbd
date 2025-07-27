@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { AdminAuthProvider, useAdminAuth } from '@/context/AdminAuthContext';
+import { useAdminAuth } from '@/context/AdminAuthContext';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +23,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-function AdminLoginPageContent() {
+export default function AdminLoginPage() {
     const router = useRouter();
     const { toast } = useToast();
     const { user, signIn, loading } = useAdminAuth();
@@ -32,7 +32,7 @@ function AdminLoginPageContent() {
 
      useEffect(() => {
         if (!loading && user) {
-            router.push('/admin');
+            router.push('/admin/dashboard');
         }
     }, [user, loading, router]);
 
@@ -112,12 +112,4 @@ function AdminLoginPageContent() {
             </Card>
         </div>
     );
-}
-
-export default function AdminLoginPage() {
-    return (
-        <AdminAuthProvider>
-            <AdminLoginPageContent />
-        </AdminAuthProvider>
-    )
 }

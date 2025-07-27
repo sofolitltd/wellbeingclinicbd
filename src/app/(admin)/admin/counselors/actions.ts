@@ -46,7 +46,7 @@ export async function addCounselor(data: unknown) {
             createdAt: Timestamp.now(),
         });
 
-        revalidatePath('/admin/counselors');
+        revalidatePath('/admin/dashboard/counselors');
         return { success: true };
 
     } catch (error: any) {
@@ -66,14 +66,14 @@ export async function deleteCounselor(uid: string): Promise<{ success: boolean; 
         await adminAuth.deleteUser(uid);
         await deleteDoc(doc(db, 'counselors', uid));
         
-        revalidatePath('/admin/counselors');
+        revalidatePath('/admin/dashboard/counselors');
         return { success: true };
     } catch (error: any) {
         console.error("Error deleting counselor:", error);
         if (error.code === 'auth/user-not-found') {
             try {
                 await deleteDoc(doc(db, 'counselors', uid));
-                revalidatePath('/admin/counselors');
+                revalidatePath('/admin/dashboard/counselors');
                 return { success: true };
             } catch (fsError) {
                  console.error("Error deleting counselor from Firestore:", fsError);
@@ -225,7 +225,7 @@ export async function updateCounselorPassword(uid: string, data: unknown): Promi
             tempPassword: '', // Clear the temporary password
         });
 
-        revalidatePath('/admin/counselors');
+        revalidatePath('/admin/dashboard/counselors');
         return { success: true };
     } catch (error) {
         console.error("Failed to update password:", error);
