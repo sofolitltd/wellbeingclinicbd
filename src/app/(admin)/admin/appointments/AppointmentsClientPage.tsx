@@ -50,6 +50,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { counselors as allCounselors } from "@/data/counselors";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 const availableServices = [
@@ -269,26 +270,28 @@ export function AppointmentsClientPage({ initialData }: { initialData: Serializa
                         </DialogDescription>
                     </DialogHeader>
                     {viewingAppointment && (
-                         <div className="space-y-3 py-4 text-sm">
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Client Name:</span><span>{viewingAppointment.name}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Email:</span><span>{viewingAppointment.email}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Phone:</span><span>{viewingAppointment.phone}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Gender:</span><span>{viewingAppointment.gender || 'N/A'}</span></div>
-                            <Separator />
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Service:</span><span>{viewingAppointment.service}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Counselor:</span><span>{viewingAppointment.counselor}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Date:</span><span>{format(new Date(viewingAppointment.date), "PPP")}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Time:</span><span>{viewingAppointment.time}</span></div>
-                            <Separator />
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Status:</span><span>{viewingAppointment.status}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Payment Method:</span><span>{viewingAppointment.paymentMethod || 'bKash'}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Payment Mobile:</span><span>{viewingAppointment.paymentMobileNo || 'N/A'}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Trx ID:</span><span>{viewingAppointment.trxID || 'N/A'}</span></div>
-                            <Separator />
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Total Price:</span><span className="font-bold">৳{viewingAppointment.totalPrice}</span></div>
-                             <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Added By:</span><span>{viewingAppointment.addedBy}</span></div>
-                            <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Booked On:</span><span>{format(new Date(viewingAppointment.createdAt), "PPp")}</span></div>
-                        </div>
+                        <ScrollArea className="max-h-[60vh] pr-4">
+                            <div className="space-y-3 py-4 text-sm">
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Client Name:</span><span>{viewingAppointment.name}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Email:</span><span>{viewingAppointment.email}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Phone:</span><span>{viewingAppointment.phone}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Gender:</span><span>{viewingAppointment.gender || 'N/A'}</span></div>
+                                <Separator />
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Service:</span><span>{viewingAppointment.service}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Counselor:</span><span>{viewingAppointment.counselor}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Date:</span><span>{format(new Date(viewingAppointment.date), "PPP")}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Time:</span><span>{viewingAppointment.time}</span></div>
+                                <Separator />
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Status:</span><span>{viewingAppointment.status}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Payment Method:</span><span>{viewingAppointment.paymentMethod || 'bKash'}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Payment Mobile:</span><span>{viewingAppointment.paymentMobileNo || 'N/A'}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Trx ID:</span><span>{viewingAppointment.trxID || 'N/A'}</span></div>
+                                <Separator />
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Total Price:</span><span className="font-bold">৳{viewingAppointment.totalPrice}</span></div>
+                                 <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Added By:</span><span>{viewingAppointment.addedBy}</span></div>
+                                <div className="flex justify-between"><span className="font-semibold text-muted-foreground">Booked On:</span><span>{format(new Date(viewingAppointment.createdAt), "PPp")}</span></div>
+                            </div>
+                        </ScrollArea>
                     )}
                     <DialogFooter>
                         <DialogClose asChild><Button type="button" variant="secondary">Close</Button></DialogClose>
