@@ -8,6 +8,7 @@ import { collection, addDoc, serverTimestamp, query, where, getDocs, limit, Time
 import nodemailer from 'nodemailer';
 import { format, parse } from 'date-fns';
 import type { Appointment } from '@/app/(admin)/admin/actions';
+import { counselors } from '@/data/counselors';
 
 // Add the shortId to the SerializableAppointment type
 export type SerializableAppointment = Omit<Appointment, 'createdAt'> & {
@@ -54,6 +55,8 @@ export async function createPendingAppointment(details: PendingBookingDetails): 
   const { firstName, lastName, gender, ...validatedDetails } = validation.data;
   const combinedName = `${firstName} ${lastName}`;
   const shortId = generateShortId();
+  const counselorData = counselors.find(c => c.value === validatedDetails.counselorId);
+  const meetLink = counselorData?.meetLink || 'https://meet.google.com/bdm-mqir-biq'; // Fallback link
   
   try {
     await addDoc(collection(db, 'appointments'), {
@@ -64,7 +67,7 @@ export async function createPendingAppointment(details: PendingBookingDetails): 
       status: 'Pending',
       paymentStatus: 'Pending', 
       addedBy: 'Client',
-      meetLink: 'https://meet.google.com/bdm-mqir-biq',
+      meetLink: meetLink,
       shortId: shortId, // Save the short ID
       type: 'Online' as const,
       createdAt: serverTimestamp(),

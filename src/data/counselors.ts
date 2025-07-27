@@ -30,6 +30,7 @@ export const counselors = [
         bio: 'Afjal specializes in providing support for anxiety, depression, and stress management. He employs a client-centered approach, combining evidence-based techniques to help individuals develop coping mechanisms and foster resilience. His goal is to create a safe, empathetic space where clients feel empowered to explore their challenges and work towards lasting mental wellness.',
         services: ['student-counseling', 'individual-counseling', 'couple-counseling', 'family-counseling'], 
         times: ['08:00 PM', '10:00 PM'],
+        meetLink: 'https://meet.google.com/gjc-nmgf-yms',
         expertise: ['Anxiety & Depression', 'Stress Management', 'Trauma-Informed Care', 'Coping Skills'],
         education: [
             'M.S. in Psychology, University of Chittagong',
@@ -53,6 +54,7 @@ export const counselors = [
         bio: 'Bibi Hazera focuses on relationship issues, helping both individuals and couples improve their communication and connection. She is skilled in navigating complex family dynamics and provides practical tools to foster healthier interactions. Her therapeutic style is warm, collaborative, and tailored to the unique needs of her clients, creating a supportive environment for growth.',
         services: ['student-counseling', 'individual-counseling', 'couple-counseling'], 
         times: ['06:00 PM', '08:00 PM', '10:00 PM'],
+        meetLink: 'https://meet.google.com/rcf-djdf-yje',
         expertise: ['Relationship Counseling', 'Family Dynamics', 'Communication Skills', 'Couples Therapy'],
         education: [
             'M.S. in Psychology, University of Chittagong',
@@ -72,6 +74,7 @@ export const counselors = [
         bio: 'As a co-founder, Reyad is dedicated to helping young adults navigate life transitions and career challenges. He provides strategic guidance and support, empowering clients to build confidence and pursue their goals. His approach is practical, solution-focused, and aimed at fostering long-term personal and professional growth for students and young professionals alike.',
         services: ['student-counseling', 'individual-counseling', 'couple-counseling'], 
         times: ['06:00 PM', '08:00 PM', '10:00 PM'],
+        meetLink: 'https://meet.google.com/dmr-apqw-jvo',
         expertise: ['Student Counseling', 'Career Guidance', 'Life Transitions', 'Personal Development'],
         education: [
             'M.S. in Psychology, University of Chittagong',
@@ -93,6 +96,7 @@ export const counselors = [
         bio: 'As Lead Counselor, Sabiha brings expertise in cognitive-behavioral therapy (CBT) and mindfulness-based interventions. She is committed to providing high-quality, evidence-based care and leading the clinical team with integrity. Her focus is on creating a supportive atmosphere for both clients and fellow counselors to thrive while ensuring the best clinical outcomes.',
         services: ['student-counseling', 'individual-counseling', 'couple-counseling', 'family-counseling'], 
         times: ['08:00 PM', '10:00 PM'],
+        meetLink: 'https://meet.google.com/xbe-rjie-qdr',
         expertise: ['Cognitive Behavioral Therapy (CBT)', 'Mindfulness', 'Clinical Supervision', 'Evidence-Based Practice'],
         education: [
             'M.S. in Psychology, University of Chittagong',
@@ -112,6 +116,7 @@ export const counselors = [
         bio: 'Upoma provides a safe, non-judgmental space for individuals to explore personal growth and enhance their self-esteem. She uses an integrative approach, drawing from various therapeutic modalities to best suit the client. Her passion is helping people build a stronger sense of self, overcome personal barriers, and ultimately live more authentic and fulfilling lives.',
         services: ['student-counseling', 'individual-counseling', 'couple-counseling', 'family-counseling'], 
         times: ['06:00 PM', '08:00 PM', '10:00 PM'],
+        meetLink: 'https://meet.google.com/gwx-dxhn-prk',
         expertise: ['Personal Growth', 'Self-Esteem', 'Integrative Therapy', 'Women\'s Issues'],
         education: [
             'M.S. in Psychology, University of Chittagong',

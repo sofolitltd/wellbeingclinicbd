@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { db } from '@/lib/firebase';
@@ -113,6 +114,7 @@ export async function createManualAppointment(data: unknown): Promise<{ success:
         name: `${firstName} ${lastName}`,
         counselor: counselorData?.name || 'Not Sure', // Store name
         counselorId: counselor, // Store id
+        meetLink: counselorData?.meetLink || '',
         addedBy: 'Reyad', // Hardcoded as requested
         trxID: restData.paymentMethod === 'Cash' ? '' : restData.trxID,
         type: 'Online' as const,
@@ -150,11 +152,15 @@ export async function updateAppointment(id: string, data: unknown): Promise<{ su
 
     const counselorData = counselors.find(c => c.value === validation.data.counselor);
 
-    const dataToUpdate = {
+    const dataToUpdate: any = {
         ...validation.data,
         counselor: counselorData?.name || 'Not Sure', // Store name
         counselorId: validation.data.counselor, // Store id
     };
+
+    if (counselorData?.meetLink) {
+        dataToUpdate.meetLink = counselorData.meetLink;
+    }
 
     try {
         const appointmentRef = doc(db, 'appointments', id);
