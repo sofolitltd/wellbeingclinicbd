@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
 
@@ -95,127 +93,124 @@ export default function ClientSignupPage() {
     }
     
     return (
-        <>
-            <Breadcrumbs items={[{ label: 'Sign Up' }]} />
-            <div className="container mx-auto px-4 py-16 md:px-6 flex items-center justify-center">
-                <Card className="w-full max-w-lg">
-                    <CardHeader className="text-center">
-                        <CardTitle>Create Your Client Account</CardTitle>
-                        <CardDescription>Join our community to manage your wellness journey.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="firstName">First Name</Label>
-                                    <Input id="firstName" {...form.register('firstName')} />
-                                    {form.formState.errors.firstName && <p className="text-sm text-destructive">{form.formState.errors.firstName.message}</p>}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="lastName">Last Name</Label>
-                                    <Input id="lastName" {...form.register('lastName')} />
-                                    {form.formState.errors.lastName && <p className="text-sm text-destructive">{form.formState.errors.lastName.message}</p>}
-                                </div>
-                            </div>
-                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="mobile">Mobile Number</Label>
-                                    <Input id="mobile" type="tel" {...form.register('mobile')} />
-                                    {form.formState.errors.mobile && <p className="text-sm text-destructive">{form.formState.errors.mobile.message}</p>}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="gender">Gender</Label>
-                                    <Controller
-                                        control={form.control}
-                                        name="gender"
-                                        render={({ field }) => (
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <SelectTrigger id="gender"><SelectValue placeholder="Select gender" /></SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="Male">Male</SelectItem>
-                                                    <SelectItem value="Female">Female</SelectItem>
-                                                    <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        )}
-                                    />
-                                    {form.formState.errors.gender && <p className="text-sm text-destructive">{form.formState.errors.gender.message}</p>}
-                                </div>
-                            </div>
-                             <div className="space-y-2">
-                                <Label>Date of Birth</Label>
-                                <div className="grid grid-cols-3 gap-2">
-                                     <Controller
-                                        control={form.control}
-                                        name="dob_day"
-                                        render={({ field }) => (
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <SelectTrigger><SelectValue placeholder="Day" /></SelectTrigger>
-                                                <SelectContent>{days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
-                                            </Select>
-                                        )}
-                                    />
-                                     <Controller
-                                        control={form.control}
-                                        name="dob_month"
-                                        render={({ field }) => (
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <SelectTrigger><SelectValue placeholder="Month" /></SelectTrigger>
-                                                <SelectContent>{months.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
-                                            </Select>
-                                        )}
-                                    />
-                                     <Controller
-                                        control={form.control}
-                                        name="dob_year"
-                                        render={({ field }) => (
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <SelectTrigger><SelectValue placeholder="Year" /></SelectTrigger>
-                                                <SelectContent>{years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}</SelectContent>
-                                            </Select>
-                                        )}
-                                    />
-                                </div>
-                                {(form.formState.errors.dob_day || form.formState.errors.dob_month || form.formState.errors.dob_year) && <p className="text-sm text-destructive">Please select a valid date of birth.</p>}
+        <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
+            <Card className="w-full max-w-lg">
+                <CardHeader className="text-center">
+                    <CardTitle>Create Your Client Account</CardTitle>
+                    <CardDescription>Join our community to manage your wellness journey.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="firstName">First Name</Label>
+                                <Input id="firstName" {...form.register('firstName')} />
+                                {form.formState.errors.firstName && <p className="text-sm text-destructive">{form.formState.errors.firstName.message}</p>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input id="email" type="email" {...form.register('email')} />
-                                {form.formState.errors.email && <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>}
+                                <Label htmlFor="lastName">Last Name</Label>
+                                <Input id="lastName" {...form.register('lastName')} />
+                                {form.formState.errors.lastName && <p className="text-sm text-destructive">{form.formState.errors.lastName.message}</p>}
+                            </div>
+                        </div>
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="mobile">Mobile Number</Label>
+                                <Input id="mobile" type="tel" {...form.register('mobile')} />
+                                {form.formState.errors.mobile && <p className="text-sm text-destructive">{form.formState.errors.mobile.message}</p>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
-                                 <div className="relative">
-                                    <Input id="password" type={showPassword ? 'text' : 'password'} placeholder="********" {...form.register('password')} autoComplete="new-password" />
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute inset-y-0 right-0 h-full px-3"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                                    >
-                                        {showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                                    </Button>
-                                </div>
-                                {form.formState.errors.password && <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>}
+                                <Label htmlFor="gender">Gender</Label>
+                                <Controller
+                                    control={form.control}
+                                    name="gender"
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <SelectTrigger id="gender"><SelectValue placeholder="Select gender" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Male">Male</SelectItem>
+                                                <SelectItem value="Female">Female</SelectItem>
+                                                <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                                {form.formState.errors.gender && <p className="text-sm text-destructive">{form.formState.errors.gender.message}</p>}
                             </div>
-                            <Button type="submit" className="w-full" disabled={isSubmitting}>
-                                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Create Account
-                            </Button>
-                        </form>
-                    </CardContent>
-                    <CardFooter className="flex flex-col items-center gap-2">
-                         <p className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <Button variant="link" asChild className="p-0">
-                                <Link href="/login">Log in</Link>
-                            </Button>
-                        </p>
-                    </CardFooter>
-                </Card>
-            </div>
-        </>
+                        </div>
+                         <div className="space-y-2">
+                            <Label>Date of Birth</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                 <Controller
+                                    control={form.control}
+                                    name="dob_day"
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <SelectTrigger><SelectValue placeholder="Day" /></SelectTrigger>
+                                            <SelectContent>{days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                                 <Controller
+                                    control={form.control}
+                                    name="dob_month"
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <SelectTrigger><SelectValue placeholder="Month" /></SelectTrigger>
+                                            <SelectContent>{months.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                                 <Controller
+                                    control={form.control}
+                                    name="dob_year"
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <SelectTrigger><SelectValue placeholder="Year" /></SelectTrigger>
+                                            <SelectContent>{years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}</SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                            </div>
+                            {(form.formState.errors.dob_day || form.formState.errors.dob_month || form.formState.errors.dob_year) && <p className="text-sm text-destructive">Please select a valid date of birth.</p>}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" type="email" {...form.register('email')} />
+                            {form.formState.errors.email && <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                             <div className="relative">
+                                <Input id="password" type={showPassword ? 'text' : 'password'} placeholder="********" {...form.register('password')} autoComplete="new-password" />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute inset-y-0 right-0 h-full px-3"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    {showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                            {form.formState.errors.password && <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>}
+                        </div>
+                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Create Account
+                        </Button>
+                    </form>
+                </CardContent>
+                <CardFooter className="flex flex-col items-center gap-2">
+                     <p className="text-center text-sm text-muted-foreground">
+                        Already have an account?{' '}
+                        <Button variant="link" asChild className="p-0">
+                            <Link href="/login">Log in</Link>
+                        </Button>
+                    </p>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }
